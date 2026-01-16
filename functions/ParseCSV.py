@@ -20,23 +20,27 @@ def ParsePokemonData():
                     moves += ','+s
                     if s[-1] == ']':
                         end_of_moves = False
-            #print(moves)
             pokemon_moves[row[0]] = ast.literal_eval(moves) # string to list
-
-#    for key in pokemon_moves:
- #       print(key, "moves: ", pokemon_moves[key])
 
     return pokemon_moves
 
 def ParsePokemonMoves():
     moves_filename = 'moves-data.csv'
-    header = []
     moves_data = {}
 
     with open(moves_filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         header = next(reader)
         for row in reader:
-            moves_data[row[0]] = row[1:]  # move name as key, rest as values
+            move_name = row[0]
+            moves_data[move_name] = {
+                'Type': row[1],
+                'Category': row[2],
+                'Contest': row[3],
+                'PP': row[4],
+                'Power': row[5],
+                'Accuracy': row[6]
+            }
 
     return moves_data
+
