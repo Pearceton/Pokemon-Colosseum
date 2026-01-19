@@ -4,25 +4,25 @@ import ast
 def ParsePokemonData():
     pokemon_filename = 'pokemon-data.csv'
     header = []
-    pokemon_moves = {}
+    pokemon_data = {}
 
     with open(pokemon_filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         header = next(reader)
         for row in reader:
-            moves=''
-            end_of_moves=False
-            for s in row:
-                if s[0]=='[':
-                    end_of_moves = True
-                    moves = s
-                elif end_of_moves == True:
-                    moves += ','+s
-                    if s[-1] == ']':
-                        end_of_moves = False
-            pokemon_moves[row[0]] = ast.literal_eval(moves) # string to list
+            pokemon_name = row[0]
+            pokemon_data[pokemon_name] = {
+                'Type': row[1],
+                'HP': row[2],
+                'Attack': row[3],
+                'Defense': row[4],
+                'Height': row[5],
+                'Weight': row[6],
+                'Moves': row[7]
 
-    return pokemon_moves
+            }
+
+    return pokemon_data
 
 def ParsePokemonMoves():
     moves_filename = 'moves-data.csv'
