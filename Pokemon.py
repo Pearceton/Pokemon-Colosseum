@@ -10,7 +10,7 @@ def AssignPokemon():
 # Assign moves to a given Pokémon
 def AssignMoves(pokemon_name):
    pokemon_data = ParsePokemonData()  
-   moves = pokemon_data.get(pokemon_name, [])
+   moves = pokemon_data.get(pokemon_name, {}).get('Moves', [])
    assigned_moves = random.sample(moves, k=len(moves))
    return assigned_moves
 
