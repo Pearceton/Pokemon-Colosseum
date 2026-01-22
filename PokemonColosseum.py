@@ -70,8 +70,18 @@ while tr_pokemon_queue and player_pokemon_queue:
             print(f"{i}. {move}")
             i += 1
 
-        # Get player's move choice
-        selected_move = int(input(f"Team {player_name} selects: "))
+        # Get player's move choice, with input validation
+        try:
+            selected_move = int(input(f"Team {player_name} selects: "))
+
+            if selected_move < 1 or selected_move > len(AssignMoves(current_pokemon)):
+                print("Invalid move selection. Please choose a valid move number.")
+                continue
+
+        except ValueError:
+            print("Invalid input. Please enter a number corresponding to the move.")
+            continue
+
         move_to_use = AssignMoves(current_pokemon)[selected_move - 1]
 
         # Execute the move and update opponent's health
