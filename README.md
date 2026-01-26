@@ -14,3 +14,9 @@ The game continues until one team runs out of Pokémon.
      ```bash
      python PokemonColosseum.py
      ```
+## Gameplay Instructions
+  1. When prompted, enter your name.
+  2. Your team and Team Rocket will be assigned 3 random Pokemon from the Indigo League.
+  3. A coin flip will determine who goes first.
+  4. When it is your turn, enter the number corresponding with the move you would like your Pokemon to perform.
+  5. The battle continues until one team has no Pokemon left.
