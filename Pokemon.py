@@ -1,6 +1,26 @@
 import random
 from functions.ParseCSV import ParsePokemonData, ParsePokemonMoves
 
+class Pokemon:    
+    def __init__(self, name):
+
+        pokemon_data = ParsePokemonData()
+        
+        if name not in pokemon_data:
+            raise ValueError(f"Pokemon '{name}' not found in database")
+        
+        data = pokemon_data[name]
+        
+        self.name = name
+        self.type = data['Type']
+        self.hp = data['HP']
+        self.attack = data['Attack']
+        self.defense = data['Defense']
+        self.height = data['Height']
+        self.weight = data['Weight']
+        self.moves = data['Moves']
+
+
 # Assign three random Pokémon to a team
 def AssignPokemon():
    pokemon_data = ParsePokemonData()  

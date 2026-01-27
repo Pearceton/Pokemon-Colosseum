@@ -52,13 +52,15 @@ while tr_pokemon_queue and player_pokemon_queue:
     if is_player_turn:
 
         print(f"{player_name}'s turn! {current_pokemon} is ready to attack.")
+
+        available_moves = AssignMoves(current_pokemon)
         
         # Logic for player's attack
         print(f"Choose the move for {current_pokemon}:")
 
         # Display assigned moves
         i = 1
-        for move in AssignMoves(current_pokemon):
+        for move in available_moves:
             print(f"{i}. {move}")
             i += 1
 
@@ -66,7 +68,7 @@ while tr_pokemon_queue and player_pokemon_queue:
         try:
             selected_move = int(input(f"Team {player_name} selects: "))
 
-            if selected_move < 1 or selected_move > len(AssignMoves(current_pokemon)):
+            if selected_move < 1 or selected_move > len(available_moves):
                 print("Invalid move selection. Please choose a valid move number.")
                 continue
 
@@ -74,7 +76,7 @@ while tr_pokemon_queue and player_pokemon_queue:
             print("Invalid input. Please enter a number corresponding to the move.")
             continue
 
-        move_to_use = AssignMoves(current_pokemon)[selected_move - 1]
+        move_to_use = available_moves[selected_move - 1]
 
         # Execute the move and update opponent's health
         print(f"{current_pokemon} cast {move_to_use} to {tr_pokemon}:\n")
@@ -88,7 +90,7 @@ while tr_pokemon_queue and player_pokemon_queue:
             
             # If Team Rocket has no more Pokemon, player wins
             if not tr_pokemon_queue:
-                print(f"Team Rocket has no more Pokémon left! Team {player_name} wins!")
+                print(f"Team Rocket has no more Pokemon left! Team {player_name} wins!")
                 break
             
             # Switch to next Team Rocket Pokemon
@@ -117,7 +119,7 @@ while tr_pokemon_queue and player_pokemon_queue:
             
             # If player has no more Pokemon, Team Rocket wins
             if not player_pokemon_queue:
-                print(f"Team {player_name} has no more Pokémon left! Team Rocket wins!")
+                print(f"Team {player_name} has no more Pokemon left! Team Rocket wins!")
                 break
             
             # Switch to next player Pokemon
