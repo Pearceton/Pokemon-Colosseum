@@ -6,34 +6,51 @@ from Pokemon import AssignPokemon, AssignMoves, Damage
 print("Welcome to Pokemon Colosseum!\n")
 player_name = input("What is your name?: ")
 
-# Assign Pokemon to each team
-team_rocket_pokemon = AssignPokemon()
+# Assign Pokemon to each team 
+team_rocket_pokemon, player_pokemon = AssignPokemon()
 tr_pokemon_1 = team_rocket_pokemon[0]
 tr_pokemon_2 = team_rocket_pokemon[1]
 tr_pokemon_3 = team_rocket_pokemon[2]
 
-player_pokemon = AssignPokemon()
 player_pokemon_1 = player_pokemon[0]
 player_pokemon_2 = player_pokemon[1]
 player_pokemon_3 = player_pokemon[2]
 
 # Display teams
-print("\nTeam Rocket enters! They come with", tr_pokemon_1 + ",", tr_pokemon_2 + ", and", tr_pokemon_3 + "!\n")
-print("Team", player_name + " enters! They come with", player_pokemon_1 + ",", player_pokemon_2 + ", and", player_pokemon_3 + "!\n")
+print(f"Team Rocket enters with {tr_pokemon_1}, {tr_pokemon_2}, and {tr_pokemon_3}.")
+print(f"Team {player_name} enters with {player_pokemon_1}, {player_pokemon_2}, and {player_pokemon_3}.\n")
 
 print("Let the battle begin!\n")
 
 # Flip a coin to decide who goes first
-coin_flip = random.choice(["Team Rocket", player_name])
-print(coin_flip, "will go first!\n")
+coin_flip = random.choice(["Team Rocket", f"Team {player_name}"])
+print(f"Coin toss goes to {coin_flip} to start the attack!\n")
 
 
 # Add Pokemon from each team to a queue
 tr_pokemon_queue = [tr_pokemon_1, tr_pokemon_2, tr_pokemon_3]
 player_pokemon_queue = [player_pokemon_1, player_pokemon_2, player_pokemon_3]
 
+# Track used moves for each Pokemon
+tr_used_moves = {tr_pokemon_1: [], tr_pokemon_2: [], tr_pokemon_3: []}
+player_used_moves = {player_pokemon_1: [], player_pokemon_2: [], player_pokemon_3: []}
+
+# Helper function to get available moves
+def get_available_moves(pokemon, used_moves_dict):
+    all_moves = AssignMoves(pokemon)
+    used = used_moves_dict.get(pokemon, [])
+    
+    # If all moves have been used, reset
+    if len(used) >= len(all_moves):
+        used_moves_dict[pokemon] = []
+        used = []
+    
+    # Return moves not yet used
+    available = [m for m in all_moves if m not in used]
+    return available if available else all_moves
+
 # Assign values to track whose turn it is
-is_player_turn = (coin_flip == player_name)
+is_player_turn = (coin_flip == f"Team {player_name}")
 current_turn = "Player" if is_player_turn else "Team Rocket"
 
 # Function to switch turns
@@ -51,9 +68,8 @@ while tr_pokemon_queue and player_pokemon_queue:
 
     if is_player_turn:
 
-        print(f"{player_name}'s turn! {current_pokemon} is ready to attack.")
-
-        available_moves = AssignMoves(current_pokemon)
+        # Get available moves
+        available_moves = get_available_moves(current_pokemon, player_used_moves)
         
         # Logic for player's attack
         print(f"Choose the move for {current_pokemon}:")
@@ -77,6 +93,9 @@ while tr_pokemon_queue and player_pokemon_queue:
             continue
 
         move_to_use = available_moves[selected_move - 1]
+        
+        # Mark move as used
+        player_used_moves[current_pokemon].append(move_to_use)
 
         # Execute the move and update opponent's health
         print(f"{current_pokemon} cast {move_to_use} to {tr_pokemon}:\n")
@@ -100,15 +119,21 @@ while tr_pokemon_queue and player_pokemon_queue:
         else:
             print(f"{tr_pokemon} now has {current_tr_health} HP! {current_pokemon} has {current_player_health} HP!\n")
 
+        print()
         # Switch turns
         is_player_turn = switch_turn(is_player_turn)
 
     else:
-        print(f"Team Rocket's turn! {tr_pokemon} is ready to attack.")
+        # Get available moves for Team Rocket 
+        available_moves = get_available_moves(tr_pokemon, tr_used_moves)
         
         # Logic for Team Rocket's attack
-        move_to_use = random.choice(AssignMoves(tr_pokemon))
-        print(f"Team Rocket's {tr_pokemon} uses {move_to_use}:\n")
+        move_to_use = random.choice(available_moves)
+        
+        # Mark move as used
+        tr_used_moves[tr_pokemon].append(move_to_use)
+        
+        print(f"Team Rocket's {tr_pokemon} cast '{move_to_use}' to {current_pokemon}:")
         damage = Damage(move_to_use, tr_pokemon, current_pokemon)
         current_player_health = current_player_health - damage
         print(f"Damage to {current_pokemon} is {damage} points!")
@@ -129,6 +154,7 @@ while tr_pokemon_queue and player_pokemon_queue:
         else:
             print(f"{current_pokemon} now has {current_player_health} HP! {tr_pokemon} has {current_tr_health} HP!\n")
 
+        print()
         # Switch turns
         is_player_turn = switch_turn(is_player_turn)
 

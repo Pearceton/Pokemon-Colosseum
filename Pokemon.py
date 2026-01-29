@@ -20,12 +20,11 @@ class Pokemon:
         self.weight = data['Weight']
         self.moves = data['Moves']
 
-
-# Assign three random Pokémon to a team
+# Assign Pokemon to a team
 def AssignPokemon():
-   pokemon_data = ParsePokemonData()  
-   random_pokemon_list = random.sample(list(pokemon_data.keys()), k=3)
-   return random_pokemon_list
+   pokemon_data = ParsePokemonData()
+   all_six = random.sample(list(pokemon_data.keys()), k=6)
+   return all_six[:3], all_six[3:]  # Returns two lists of 3
 
 # Assign moves to a given Pokémon
 def AssignMoves(pokemon_name):
@@ -34,7 +33,7 @@ def AssignMoves(pokemon_name):
    assigned_moves = random.sample(moves, k=len(moves))
    return assigned_moves
 
-# Dictionary for type matchups
+# Type matchup table
 type_effectiveness = {
     "Fire": {"Fire": 0.5, "Water": 0.5, "Grass": 2.0},
     "Water": {"Fire": 2.0, "Water": 0.5, "Rock": 2.0,"Grass": 0.5},
@@ -58,6 +57,10 @@ def Damage(move, pokemon_A, pokemon_B):
    attack = int(pokemon_details_A.get('Attack', 0))
    defense = int(pokemon_details_B.get('Defense', 0))
 
+   # Prevent division by zero
+   if defense == 0:
+      defense = 1
+
    # Get STAB (Same Type Attack Bonus)
    if(move_details.get('Type') == pokemon_details_A.get('Type')):
       STAB = 1.5
@@ -65,7 +68,13 @@ def Damage(move, pokemon_A, pokemon_B):
       STAB = 1.0
 
    # Get Type Effectiveness
-   TE = type_effectiveness.get(move_details.get('Type'), {}).get(pokemon_details_B.get('Type'), 1.0)
+   move_type = move_details.get('Type', 'Normal')
+   defender_type = pokemon_details_B.get('Type')
+   
+   if move_type in type_effectiveness:
+      TE = type_effectiveness[move_type].get(defender_type, 1.0)
+   else:
+      TE = 1.0  # "Others" row default
 
    # Formula for Damage Calculation
    damage = round(power * attack/defense * STAB * TE * random.uniform(0.5, 1.0))
