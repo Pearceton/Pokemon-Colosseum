@@ -20,3 +20,10 @@ The game continues until one team runs out of Pokémon.
   3. A coin flip will determine who goes first.
   4. When it is your turn, enter the number corresponding with the move you would like your Pokemon to perform.
   5. The battle continues until one team has no Pokemon left.
+
+## Preview
+### Beginning of Battle
+![Beginning of Battle](pictures/Start_of_battle.png)
+
+### End of Battle
+![End of Battle](pictures/End_of_battle.png)
