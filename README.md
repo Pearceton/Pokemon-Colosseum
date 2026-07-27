@@ -23,7 +23,7 @@ The game continues until one team runs out of Pokémon.
 
 ## Preview
 ### Beginning of Battle
-![Beginning of Battle](pictures/Start_of_battle.png)
+![Beginning of Battle](pictures/Beginning_of_battle.png)
 
 ### End of Battle
 ![End of Battle](pictures/End_of_battle.png)
